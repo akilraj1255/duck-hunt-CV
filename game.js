@@ -2,7 +2,7 @@
  * ============================================================================
  * DUCK HUNT CV - LOGIC EXPLANATION (V3 - FULL DOCUMENTATION)
  * ============================================================================
- * 
+ *  -
  * 1. COMPUTER VISION MAPPING:
  *    - Sensitivity: 1.4x amplification of hand movement to reach screen edges easily.
  *    - Smoothing (LERP): 0.7 interpolation to prevent jittery crosshair movement.
