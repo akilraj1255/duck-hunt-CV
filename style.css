@@ -1,0 +1,376 @@
+/* CSS Design Variables for a consistent Neon-Retro theme */
+:root {
+    --primary: #55e6ff;
+    /* Neon Cyan for HUD and Borders */
+    --secondary: #ff3e6d;
+    /* Cyber Pink for Strikes and Tags */
+    --pointer: #ff0000;
+    /* Pure Red for Crosshair Visibility */
+    --accent: #ffcc33;
+    /* Golden Yellow for Ammo */
+    --bg-dark: #0a0a1a;
+    /* Deep Space Black for Background */
+    --glass: rgba(255, 255, 255, 0.1);
+    /* Transparent White for UI panels */
+    --glass-border: rgba(255, 255, 255, 0.2);
+    /* Soft highlight for glass edges */
+    --font-retro: 'Press Start 2P', cursive;
+    /* 8-bit style Font */
+    --font-main: 'Outfit', sans-serif;
+    /* Modern, clean Text Font */
+}
+
+/* Global Reset: Remove browser default spacing and sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Force padding to stay inside defined widths */
+}
+
+/* Body setup: Full screen, no scrolling, centered display */
+body {
+    background: var(--bg-dark);
+    /* Dark base color */
+    color: white;
+    /* Default text to white */
+    font-family: var(--font-main);
+    height: 100vh;
+    /* 100% of viewport height */
+    width: 100vw;
+    /* 100% of viewport width */
+    overflow: hidden;
+    /* Prevent accidental scrollbars */
+    display: flex;
+    /* Use flexbox to center the game */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main App Wrapper: Adds a nice radial glow to the background */
+#app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1a1a3a 0%, #050510 100%);
+}
+
+/* Game Container: The actual game viewport with rounded corners */
+#game-container {
+    position: relative;
+    /* Necessary for absolute children (crosshair, HUD) */
+    width: 90vw;
+    /* Take up 90% of screen width */
+    height: 90vh;
+    /* Take up 90% of screen height */
+    max-width: 1200px;
+    /* Max size limit */
+    max-height: 800px;
+    background: #000;
+    /* Black fill while assets load */
+    border: 4px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(0, 230, 255, 0.2);
+    overflow: hidden;
+    /* Keep ducks/bullets inside the frame */
+}
+
+/* Layering: Canvas is on the bottom */
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* CV Layer: The small corner webcam preview monitor */
+#cv-layer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    height: 150px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--primary);
+    z-index: 10;
+    /* Always on top of the game background */
+    background: #000;
+    opacity: 0.8;
+    /* Semi-transparent until hovered */
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for CV monitor */
+#cv-layer:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    /* Pop up slightly when looking at it */
+}
+
+/* Flip the webcam horizontally so it acts like a mirror */
+#webcam {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+/* AI Skeleton overlay (mirrored to match the video) */
+#cv-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+}
+
+/* HUD Panel: The dashboard at the top */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 5;
+    pointer-events: none;
+    /* So you can click 'through' the HUD to ducks */
+}
+
+/* Individual HUD Boxes (Time, Score, Level, etc) */
+.hud-item {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    /* Blur the scene behind the HUD */
+    border: 1px solid var(--glass-border);
+    padding: 15px 25px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+}
+
+/* HUD Labels (Secondary text) */
+.hud-item .label {
+    font-size: 0.7rem;
+    font-family: var(--font-retro);
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+/* HUD Values (Main numbers) */
+.hud-item .value {
+    font-size: 1.5rem;
+    font-family: var(--font-retro);
+    letter-spacing: 2px;
+}
+
+/* Strike System Container (X X X) */
+#strike-display {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-retro);
+    font-size: 1.5rem;
+    margin-top: 5px;
+}
+
+/* Default Strike color (Off) */
+.strike-off {
+    color: #444;
+}
+
+/* Active Strike color (Bright Pink Glow) */
+.strike-on {
+    color: var(--secondary);
+    text-shadow: 0 0 10px var(--secondary);
+}
+
+/* Ammo Container */
+#ammo-display {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+/* Individual Bullet Graphic */
+.bullet {
+    width: 10px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Spent Bullet color */
+.bullet.spent {
+    background: #444;
+    box-shadow: none;
+}
+
+/* Full screen Menus (Start/Game Over) */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    /* Blackout background */
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Main title with text shadow glow */
+.menu-content h1 {
+    font-family: var(--font-retro);
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--primary);
+}
+
+/* 'CV' Pink tag in title */
+.cv-tag {
+    color: var(--secondary);
+}
+
+/* Menu descriptions */
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+    margin-bottom: 40px;
+}
+
+/* Instruction box with soft background */
+.instructions {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+/* Individual instruction lines */
+.instructions p {
+    margin: 10px 0;
+    font-weight: 300;
+}
+
+/* Glitch Button: Large and interactive */
+.glitch-btn {
+    padding: 20px 40px;
+    font-family: var(--font-retro);
+    font-size: 1rem;
+    background: var(--primary);
+    border: none;
+    color: #000;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+/* Button Hover State */
+.glitch-btn:hover {
+    transform: translateY(-5px);
+    /* Lift up effect */
+    box-shadow: 0 0 40px var(--primary);
+}
+
+/* Button Click State */
+.glitch-btn:active {
+    transform: translateY(0);
+}
+
+/* =========================================
+   STABILIZED CROSSHAIR UI (Line-by-Line)
+   ========================================= */
+#crosshair {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    pointer-events: none;
+    /* So we don't accidentally click the crosshair */
+    z-index: 200;
+    /* Highest layer */
+    display: none;
+    /* Hidden until camera starts */
+    transform: translate(-50%, -50%);
+    /* Keeps it centered on pinpoint accuracy */
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Smooth, organic snapping */
+}
+
+/* Central Red Dot & Small pulsing ring */
+#crosshair .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--pointer);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px var(--pointer), inset 0 0 5px var(--pointer);
+}
+
+/* Precision Cross Lines (Drawn using CSS Gradients) */
+#crosshair::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    /* Creates sharp 1px red lines that crossover at center */
+    background:
+        linear-gradient(to bottom, transparent 48%, var(--pointer) 49%, var(--pointer) 51%, transparent 52%),
+        linear-gradient(to right, transparent 48%, var(--pointer) 49%, var(--pointer) 51%, transparent 52%);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Subtle holographic outer frame */
+#crosshair::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255, 62, 109, 0.3);
+    /* Soft pink border */
+    border-radius: 4px;
+}
+
+/* SHOOTING ANIMATION: Trigged via JS class toggle */
+#crosshair.shooting {
+    transform: translate(-50%, -50%) scale(1.8);
+    /* Rapid expansion */
+    opacity: 0.5;
+}
+
+#crosshair.shooting .circle {
+    border-color: white;
+    /* Flash white when firing */
+    box-shadow: 0 0 40px white;
+}
+
+/* Small camera status text at bottom of menu */
+#status-msg {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: var(--secondary);
+}

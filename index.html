@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- Declare the document type as HTML5 to ensure modern browser standards -->
+<html lang="en">
+<!-- Start of the HTML document with the primary language set to English -->
+
+<head>
+    <!-- Meta set for character encoding to support all symbols and emojis -->
+    <meta charset="UTF-8">
+    <!-- Viewport settings to ensure the game scales correctly on mobile and desktop devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- The title displayed in the browser tab -->
+    <title>Duck Hunt CV - Premium Edition</title>
+    <!-- Link to the external CSS file for all styling and animations -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Import high-quality Google Fonts (Retro 'Press Start 2P' and Modern 'Outfit') -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Main application wrapper that centers the game on the screen -->
+    <div id="app">
+        <!-- The primary game viewport container with a fixed aspect ratio/boundary -->
+        <div id="game-container">
+            <!-- Main Game Rendering Canvas where ducks, backgrounds, and effects are drawn -->
+            <canvas id="gameCanvas"></canvas>
+
+            <!-- Computer Vision Layer: Contains the camera feed and the AI skeletal overlay -->
+            <div id="cv-layer">
+                <!-- Video element used to capture the raw webcam stream -->
+                <video id="webcam" autoplay playsinline></video>
+                <!-- Canvas used to draw the red hand points detected by MediaPipe -->
+                <canvas id="cv-overlay"></canvas>
+            </div>
+
+            <!-- Heads-Up Display (HUD): Top bar showing game status and progress -->
+            <div id="hud">
+                <!-- Level Timer Display: Counts down the 60 seconds per round -->
+                <div class="hud-item" id="timer-board">
+                    <span class="label">TIME</span>
+                    <span class="value" id="round-timer">60</span>
+                </div>
+                <!-- Score Display: Accumulates points from hit ducks -->
+                <div class="hud-item" id="score-board">
+                    <span class="label">SCORE</span>
+                    <span class="value" id="score">000000</span>
+                </div>
+                <!-- Level Indicator: Shows the current difficulty level -->
+                <div class="hud-item" id="rounds-board">
+                    <span class="label">LEVEL</span>
+                    <span class="value" id="round">1</span>
+                </div>
+                <!-- Strikes Display: Shows how many ducks have escaped (3 = Game Over) -->
+                <div class="hud-item" id="strikes-board">
+                    <span class="label">STRIKES</span>
+                    <div id="strike-display">
+                        <!-- 'X' symbols that light up red when a duck escapes -->
+                        <span class="strike-off">X</span>
+                        <span class="strike-off">X</span>
+                        <span class="strike-off">X</span>
+                    </div>
+                </div>
+                <!-- Ammo/Shots Display: Shows remaining bullets (reloads on hit) -->
+                <div class="hud-item" id="ammo-board">
+                    <span class="label">SHOTS</span>
+                    <div id="ammo-display">
+                        <div class="bullet"></div>
+                        <div class="bullet"></div>
+                        <div class="bullet"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Menu / Start Screen Overlay: Block gameplay until camera is ready -->
+            <div id="menu-overlay" class="overlay">
+                <div class="menu-content">
+                    <!-- Retro Glitch Title -->
+                    <h1 id="menu-title">DUCK HUNT <span class="cv-tag">CV</span></h1>
+                    <!-- Friendly Subtitle -->
+                    <p id="menu-subtitle" class="subtitle">Experience the classic with Computer Vision controls</p>
+                    <!-- Visual Instruction List -->
+                    <div class="instructions" id="menu-instructions">
+                        <p>Move your hand to aim</p>
+                        <p>Pinch fingers to shoot</p>
+                        <p>Don't let 3 ducks escape!</p>
+                    </div>
+                    <!-- Master Start Button to trigger browser camera permissions -->
+                    <button id="start-btn" class="glitch-btn">INITIALIZE WEBCAM</button>
+                    <!-- Dynamic status message (Loading AI vs Ready) -->
+                    <div id="status-msg">Waiting for camera access...</div>
+                </div>
+            </div>
+
+            <!-- Custom Reticle: The holographic crosshair controlled by hand tracking -->
+            <div id="crosshair">
+                <!-- Inner circle element used for pulsing and shooting animations -->
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ES6 Module Game Script: 'type=module' is required for the 'import' statements in JS -->
+    <script type="module" src="game.js"></script>
+</body>
+
+</html>
