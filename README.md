@@ -1,5 +1,7 @@
 # 🎯 Duck Hunt CV: Neon Retro Edition
 
+![Game Preview](./preview1.png)
+
 A high-performance, browser-based recreation of the classic **Duck Hunt**, powered by **MediaPipe Hand Tracking** for a controller-free "Minority Report" style gameplay experience.
 
 ![Game Aesthetic](https://img.shields.io/badge/Aesthetic-Neon_Retro-ff00ff)
