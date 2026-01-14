@@ -93,15 +93,16 @@ class DuckHuntGame {
         window.addEventListener('resize', () => this.resize());
 
         // Source URLs for game images
-        this.assets.bg.src = 'assets/background.png';
-        this.assets.duck.src = 'assets/duck.png';
-
-        // Initialize MediaPipe AI first
         // When duck image loads, process it to remove transparency
         this.assets.duck.onload = () => {
-            this.assets.processedDuck = this.makeTransparent(this.assets.duck, [0, 255, 0]); // Chroma key GREEN
+            console.log("Duck sprite loaded, processing transparency...");
+            this.assets.processedDuck = this.makeTransparent(this.assets.duck, [0, 255, 0]);
         };
 
+        this.assets.bg.src = 'assets/background.png';
+        this.assets.duck.src = 'assets/duck.png?v=' + Date.now(); // Cache busting
+
+        // Initialize MediaPipe AI
         await this.setupCV();
 
         // Start Interaction Logic
@@ -562,8 +563,8 @@ class DuckHuntGame {
             const b = data[i + 2];
 
             // If the pixel is close to our target "Neon Green" (#00FF00)
-            // We use a small threshold to catch slightly off-greens
-            if (g > 200 && r < 100 && b < 100) {
+            // We use a threshold to be safe
+            if (g > 150 && r < 150 && b < 150) {
                 data[i + 3] = 0; // Set Alpha to 0 (Transparent)
             }
         }
